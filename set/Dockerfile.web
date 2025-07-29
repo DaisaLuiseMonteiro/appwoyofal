@@ -1,0 +1,22 @@
+FROM php:8.3-apache
+
+# Mise à jour + installation des dépendances système
+RUN apt-get update && apt-get install -y \
+    libpq-dev \
+    libzip-dev \
+    zip \
+    unzip \
+    && docker-php-ext-install pdo pdo_pgsql pgsql
+
+# Activer le module Apache rewrite
+RUN a2enmod rewrite
+
+# Copier la configuration Apache personnalisée
+COPY apache-config.conf /etc/apache2/sites-available/000-default.conf
+
+# Installer Composer
+COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
+
+WORKDIR /app
+
+EXPOSE 80
