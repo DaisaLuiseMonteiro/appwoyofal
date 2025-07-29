@@ -1,0 +1,48 @@
+{
+    "name": "daisamonteiro/appwoyofal",
+    "description": "AppWoyofal - API de prépaiement électricité Senelec",
+    "type": "project",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Daisa Luise Monteiro",
+            "email": "daisa@example.com"
+        }
+    ],
+    "require": {
+        "php": ">=8.1",
+        "vlucas/phpdotenv": "^5.6"
+    },
+    "scripts": {
+        "dev": "composer install && cd public && php -S localhost:8083",
+        "install": "composer install",
+        "migrate": "php migrations/migration.php",
+        "seed": "php -r \"require 'vendor/autoload.php'; \\$dotenv = Dotenv\\Dotenv::createImmutable(__DIR__); \\$dotenv->load(); \\$dsn = \\$_ENV['DSN'] ?? \\\"pgsql:host={\\$_ENV['DB_HOST']};port={\\$_ENV['DB_PORT']};dbname={\\$_ENV['DB_NAME']}\\\"; \\$pdo = new PDO(\\$dsn, \\$_ENV['DB_USER'], \\$_ENV['DB_PASSWORD']); \\$sql = file_get_contents('seeders/script.sql'); \\$pdo->exec(\\$sql); echo 'Seeders exécutés avec succès\\n';\"",
+        "test": "echo 'Tests API disponibles dans tests/woyofal-api.http'",
+        "build": "docker build -t appwoyofal .",
+        "docker-run": "docker run -p 8083:80 appwoyofal",
+        "help": [
+            "echo 'AppWoyofal - Commandes disponibles:'",
+            "echo '  composer install    - Installer les dépendances'",
+            "echo '  composer dev        - Démarrer serveur développement'",
+            "echo '  composer migrate    - Exécuter migrations'", 
+            "echo '  composer seed       - Insérer données test'",
+            "echo '  composer test       - Voir tests API'",
+            "echo '  composer build      - Construire image Docker'",
+            "echo '  composer docker-run - Lancer container Docker'"
+        ]
+    },
+    "scripts-descriptions": {
+        "dev": "Démarre le serveur de développement local sur localhost:8083",
+        "install": "Installe les dépendances PHP du projet",
+        "migrate": "Exécute les migrations de base de données",
+        "seed": "Insère les données de test dans la base",
+        "test": "Affiche les tests API disponibles",
+        "build": "Construit l'image Docker pour déploiement",
+        "docker-run": "Lance le container Docker localement",
+        "database:migrate": "php migrations/Migration.php",
+        "database:seed": "php seeders/Seeder.php"
+
+    
+    }
+}

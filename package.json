@@ -1,0 +1,21 @@
+{
+  "name": "appwoyofal",
+  "version": "1.0.0",
+  "description": "AppWoyofal - API de prépaiement électricité Senelec",
+  "scripts": {
+    "dev": "cd set/archiectureprojet && composer install && cd public && php -S localhost:8083",
+    "install": "cd set/archiectureprojet && composer install",
+    "migrate": "cd set/archiectureprojet && php migrations/migration.php",
+    "seed": "cd set/archiectureprojet && php seeders/seeder.php",
+    "test": "echo 'Tests API disponibles dans set/archiectureprojet/tests/woyofal-api.http'",
+    "build": "docker build -t appwoyofal .",
+    "docker:run": "docker run -p 8083:80 appwoyofal",
+    "deploy:render": "git add . && git commit -m 'Deploy to Render' && git push origin main"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/DaisaLuiseMonteiro/appwoyofal.git"
+  },
+  "author": "Daisa Luise Monteiro",
+  "license": "MIT"
+}
