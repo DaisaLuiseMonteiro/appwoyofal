@@ -20,10 +20,9 @@ COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 WORKDIR /var/www/html
 
 # Copier le projet
-COPY set/ ./
+COPY . ./
 
 # Installation des dépendances PHP
-WORKDIR /var/www/html/archiectureprojet
 RUN composer install --no-interaction --prefer-dist --optimize-autoloader --no-dev
 
 # Configuration des permissions
