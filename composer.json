@@ -17,7 +17,7 @@
         "dev": "composer install && cd public && php -S localhost:8083",
         "install": "composer install",
         "migrate": "php migrations/migration.php",
-        "seed": "php -r \"require 'vendor/autoload.php'; \\$dotenv = Dotenv\\Dotenv::createImmutable(__DIR__); \\$dotenv->load(); \\$dsn = \\$_ENV['DSN'] ?? \\\"pgsql:host={\\$_ENV['DB_HOST']};port={\\$_ENV['DB_PORT']};dbname={\\$_ENV['DB_NAME']}\\\"; \\$pdo = new PDO(\\$dsn, \\$_ENV['DB_USER'], \\$_ENV['DB_PASSWORD']); \\$sql = file_get_contents('seeders/script.sql'); \\$pdo->exec(\\$sql); echo 'Seeders exécutés avec succès\\n';\"",
+        "seed": "php -r \"require 'vendor/autoload.php'; \\$dotenv = Dotenv\\Dotenv::createImmutable(__DIR__); \\$dotenv->load(); if (isset(\\$_ENV['DATABASE_URL'])) { \\$url = parse_url(\\$_ENV['DATABASE_URL']); \\$dsn = \\\"pgsql:host={\\$url['host']};port={\\$url['port']};dbname=\\\" . ltrim(\\$url['path'], '/') . \\\";sslmode=require\\\"; \\$username = \\$url['user']; \\$password = \\$url['pass']; } else { \\$dsn = \\$_ENV['DSN'] ?? \\\"pgsql:host={\\$_ENV['DB_HOST']};port={\\$_ENV['DB_PORT']};dbname={\\$_ENV['DB_NAME']}\\\"; \\$username = \\$_ENV['DB_USER']; \\$password = \\$_ENV['DB_PASSWORD']; } \\$pdo = new PDO(\\$dsn, \\$username, \\$password); \\$sql = file_get_contents('seeders/script.sql'); \\$pdo->exec(\\$sql); echo 'Seeders exécutés avec succès\\n';\"",
         "test": "echo 'Tests API disponibles dans tests/woyofal-api.http'",
         "build": "docker build -t appwoyofal .",
         "docker-run": "docker run -p 8083:80 appwoyofal",

@@ -7,18 +7,30 @@ $dotenv = Dotenv\Dotenv::createImmutable(__DIR__ . '/..');
 $dotenv->load();
 
 try {
-    // Use DSN if available, otherwise build from individual components
-    if (isset($_ENV['DSN'])) {
+    // Handle different database URL formats
+    if (isset($_ENV['DATABASE_URL'])) {
+        // Parse DATABASE_URL format: postgresql://username:password@hostname:port/dbname
+        $url = parse_url($_ENV['DATABASE_URL']);
+        $host = $url['host'];
+        $port = $url['port'] ?? 5432;
+        $dbname = ltrim($url['path'], '/');
+        $username = $url['user'];
+        $password = $url['pass'];
+        $dsn = "pgsql:host=$host;port=$port;dbname=$dbname;sslmode=require";
+    } elseif (isset($_ENV['DSN'])) {
+        // Use existing DSN format
         $dsn = $_ENV['DSN'];
+        $username = $_ENV['DB_USER'] ?? 'postgres';
+        $password = $_ENV['DB_PASSWORD'] ?? 'postgrespsw';
     } else {
+        // Build DSN from individual components
         $host = $_ENV['DB_HOST'] ?? 'localhost';
         $port = $_ENV['DB_PORT'] ?? '5432';
         $dbname = $_ENV['DB_NAME'] ?? 'pgdbDaf';
         $dsn = "pgsql:host=$host;port=$port;dbname=$dbname";
+        $username = $_ENV['DB_USER'] ?? 'postgres';
+        $password = $_ENV['DB_PASSWORD'] ?? 'postgrespsw';
     }
-    
-    $username = $_ENV['DB_USER'] ?? 'postgres';
-    $password = $_ENV['DB_PASSWORD'] ?? 'postgrespsw';
     $pdo = new PDO($dsn, $username, $password, [
         PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
         PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC
