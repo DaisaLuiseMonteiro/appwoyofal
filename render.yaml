@@ -1,0 +1,29 @@
+services:
+  - type: web
+    name: appwoyofal
+    runtime: docker
+    dockerfilePath: ./Dockerfile
+    dockerContext: .
+    plan: free
+    region: frankfurt
+    envVars:
+      - key: DB_USER
+        sync: false
+      - key: DB_PASSWORD
+        sync: false
+      - key: DB_HOST
+        sync: false
+      - key: DB_PORT
+        value: "5432"
+      - key: DB_NAME
+        sync: false
+      - key: APP_URL
+        value: https://appwoyofal.onrender.com
+    healthCheckPath: /health
+
+databases:
+  - name: appwoyofal-postgres
+    databaseName: appwoyofal
+    user: postgres
+    plan: free
+    region: frankfurt
