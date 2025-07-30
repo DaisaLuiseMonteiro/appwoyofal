@@ -3,12 +3,20 @@
 use Mapathe\Enums\KeyRoute;
 use Mapathe\ErrorController;
 use App\Controller\WoyofalController;
+use App\Controller\HomeController;
 
 $routes = [
     '/' => [
-        KeyRoute::CONTROLLER->value => ErrorController::class,
-        KeyRoute::METHOD->value => '_404',
-        KeyRoute::MIDDLEWARE->value => []
+        KeyRoute::CONTROLLER->value => HomeController::class,
+        KeyRoute::METHOD->value => 'index',
+        KeyRoute::MIDDLEWARE->value => [],
+        KeyRoute::HTTP_METHOD->value => 'GET'
+    ],
+    '/health' => [
+        KeyRoute::CONTROLLER->value => HomeController::class,
+        KeyRoute::METHOD->value => 'health',
+        KeyRoute::MIDDLEWARE->value => [],
+        KeyRoute::HTTP_METHOD->value => 'GET'
     ],
     '/404' => [
         KeyRoute::CONTROLLER->value => ErrorController::class,
