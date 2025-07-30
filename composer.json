@@ -13,8 +13,20 @@
         "php": ">=8.1",
         "vlucas/phpdotenv": "^5.6"
     },
+    "autoload": {
+        "psr-4": {
+            "Mapathe\\": "app/core/",
+            "Mapathe\\Enums\\": "app/core/enums/",
+            "Mapathe\\Abstract\\": "app/core/abstract/",
+            "Mapathe\\Interface\\": "app/core/Interfaces/",
+            "App\\Entity\\": "src/entity/",
+            "App\\Repository\\": "src/repository/",
+            "App\\Service\\": "src/service/",
+            "App\\Controller\\": "src/controller/"
+        }
+    },
     "scripts": {
-        "dev": "composer install && cd public && php -S localhost:8083",
+        "dev": "composer install && cd public && php -S localhost:8084",
         "install": "composer install",
         "migrate": "php migrations/migration.php",
         "seed": "php -r \"require 'vendor/autoload.php'; \\$dotenv = Dotenv\\Dotenv::createImmutable(__DIR__); \\$dotenv->load(); if (isset(\\$_ENV['DATABASE_URL'])) { \\$url = parse_url(\\$_ENV['DATABASE_URL']); \\$dsn = \\\"pgsql:host={\\$url['host']};port={\\$url['port']};dbname=\\\" . ltrim(\\$url['path'], '/') . \\\";sslmode=require\\\"; \\$username = \\$url['user']; \\$password = \\$url['pass']; } else { \\$dsn = \\$_ENV['DSN'] ?? \\\"pgsql:host={\\$_ENV['DB_HOST']};port={\\$_ENV['DB_PORT']};dbname={\\$_ENV['DB_NAME']}\\\"; \\$username = \\$_ENV['DB_USER']; \\$password = \\$_ENV['DB_PASSWORD']; } \\$pdo = new PDO(\\$dsn, \\$username, \\$password); \\$sql = file_get_contents('seeders/script.sql'); \\$pdo->exec(\\$sql); echo 'Seeders exécutés avec succès\\n';\"",

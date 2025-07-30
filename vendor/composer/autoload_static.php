@@ -23,6 +23,13 @@ class ComposerStaticInitb1af9b1ff1b912c0502727e4d1d497ac
         array (
             'PhpOption\\' => 10,
         ),
+        'M' => 
+        array (
+            'Mapathe\\Interface\\' => 18,
+            'Mapathe\\Enums\\' => 14,
+            'Mapathe\\Abstract\\' => 17,
+            'Mapathe\\' => 8,
+        ),
         'G' => 
         array (
             'GrahamCampbell\\ResultType\\' => 26,
@@ -30,6 +37,13 @@ class ComposerStaticInitb1af9b1ff1b912c0502727e4d1d497ac
         'D' => 
         array (
             'Dotenv\\' => 7,
+        ),
+        'A' => 
+        array (
+            'App\\Service\\' => 12,
+            'App\\Repository\\' => 15,
+            'App\\Entity\\' => 11,
+            'App\\Controller\\' => 15,
         ),
     );
 
@@ -50,6 +64,22 @@ class ComposerStaticInitb1af9b1ff1b912c0502727e4d1d497ac
         array (
             0 => __DIR__ . '/..' . '/phpoption/phpoption/src/PhpOption',
         ),
+        'Mapathe\\Interface\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/app/core/Interfaces',
+        ),
+        'Mapathe\\Enums\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/app/core/enums',
+        ),
+        'Mapathe\\Abstract\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/app/core/abstract',
+        ),
+        'Mapathe\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/app/core',
+        ),
         'GrahamCampbell\\ResultType\\' => 
         array (
             0 => __DIR__ . '/..' . '/graham-campbell/result-type/src',
@@ -57,6 +87,22 @@ class ComposerStaticInitb1af9b1ff1b912c0502727e4d1d497ac
         'Dotenv\\' => 
         array (
             0 => __DIR__ . '/..' . '/vlucas/phpdotenv/src',
+        ),
+        'App\\Service\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/src/service',
+        ),
+        'App\\Repository\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/src/repository',
+        ),
+        'App\\Entity\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/src/entity',
+        ),
+        'App\\Controller\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/src/controller',
         ),
     );
 

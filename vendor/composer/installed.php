@@ -3,7 +3,7 @@
         'name' => 'daisamonteiro/appwoyofal',
         'pretty_version' => 'dev-main',
         'version' => 'dev-main',
-        'reference' => '07e7894df36ea78fb7d9dbce6df06f98cf90e834',
+        'reference' => 'ae1876a46a93cc978a7bfd7f65af316e59a8cb12',
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -13,7 +13,7 @@
         'daisamonteiro/appwoyofal' => array(
             'pretty_version' => 'dev-main',
             'version' => 'dev-main',
-            'reference' => '07e7894df36ea78fb7d9dbce6df06f98cf90e834',
+            'reference' => 'ae1876a46a93cc978a7bfd7f65af316e59a8cb12',
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
