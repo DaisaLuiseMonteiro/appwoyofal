@@ -147,6 +147,18 @@ class WoyofalController
             $this->sendErrorResponse('Erreur lors de la vérification: ' . $e->getMessage(), 500);
         }
     }
+
+    public function listerCompteurs(): void
+    {
+        try {
+            $result = $this->woyofalService->listerTousLesCompteurs();
+            $this->sendResponse($result);
+            
+        } catch (\Exception $e) {
+            error_log("Erreur dans listerCompteurs(): " . $e->getMessage());
+            $this->sendErrorResponse('Erreur lors de la récupération des compteurs: ' . $e->getMessage(), 500);
+        }
+    }
     
     private function sendResponse(array $data): void
     {

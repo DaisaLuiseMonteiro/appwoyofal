@@ -17,6 +17,7 @@ class WoyofalService
     private TrancheRepository $trancheRepository;
     private AchatRepository $achatRepository;
     private LogAchatRepository $logRepository;
+    private MaxitService $maxitService;
 
     public function __construct()
     {
@@ -25,6 +26,7 @@ class WoyofalService
         $this->trancheRepository = new TrancheRepository();
         $this->achatRepository = new AchatRepository();
         $this->logRepository = new LogAchatRepository();
+        $this->maxitService = new MaxitService();
     }
 
     public function effectuerAchat(string $numero_compteur, float $montant): array
@@ -36,11 +38,23 @@ class WoyofalService
             ->setStatut('Échec');
 
         try {
-            // 1. Vérifier l'existence du compteur
+            // 1. Vérifier l'existence du compteur (local puis Maxit)
             $compteur = $this->compteurRepository->findByNumero($numero_compteur);
 
+            // Si non trouvé localement, essayer de le récupérer depuis Maxit
+            if (!$compteur) {
+                error_log("Compteur $numero_compteur non trouvé localement pour achat, recherche dans Maxit...");
+                $compteurFromMaxit = $this->maxitService->syncCompteurFromMaxit($numero_compteur);
+                
+                if ($compteurFromMaxit) {
+                    // Recharger le compteur depuis la base après synchronisation
+                    $compteur = $this->compteurRepository->findByNumero($numero_compteur);
+                    error_log("Compteur $numero_compteur synchronisé depuis Maxit pour achat");
+                }
+            }
+
             if (!$compteur || !$compteur->isActif()) {
-                $log->setMessageErreur('Numéro de compteur inexistant ou inactif');
+                $log->setMessageErreur('Numéro de compteur inexistant ou inactif dans les bases locale et Maxit');
                 $this->logRepository->save($log);
 
                 return [
@@ -140,34 +154,57 @@ class WoyofalService
     public function verifierCompteur(string $numero_compteur): array
     {
         try {
-            // SUPPRIMER CETTE LIGNE !
-            // var_dump('ok');die();
-
+            // 1. Rechercher d'abord dans la base locale
             $compteur = $this->compteurRepository->findByNumero($numero_compteur);
 
-            if (!$compteur || !$compteur->isActif()) {
+            if ($compteur && $compteur->isActif()) {
+                $client = $this->clientRepository->findById($compteur->getClientId());
+
                 return [
-                    'data' => null,
-                    'statut' => 'error',
-                    'code' => 404,
-                    'message' => 'Numéro de compteur inexistant ou inactif'
+                    'data' => [
+                        'compteur' => $compteur->getNumero(),
+                        'client' => $client ? $client->getNomComplet() : 'Client inconnu',
+                        'actif' => $compteur->isActif(),
+                        'date_creation' => $compteur->getDateCreation()->format('Y-m-d\TH:i:s\Z'),
+                        'source' => 'local'
+                    ],
+                    'statut' => 'success',
+                    'code' => 200,
+                    'message' => 'Compteur trouvé dans la base locale'
                 ];
             }
 
-            $client = $this->clientRepository->findById($compteur->getClientId());
+            // 2. Si non trouvé localement, essayer de récupérer depuis Maxit
+            error_log("Compteur $numero_compteur non trouvé localement, recherche dans Maxit...");
+            
+            $compteurFromMaxit = $this->maxitService->syncCompteurFromMaxit($numero_compteur);
+            
+            if ($compteurFromMaxit) {
+                return [
+                    'data' => [
+                        'compteur' => $compteurFromMaxit['numero'],
+                        'client' => trim($compteurFromMaxit['client_nom'] . ' ' . $compteurFromMaxit['client_prenom']),
+                        'actif' => $compteurFromMaxit['actif'],
+                        'date_creation' => $compteurFromMaxit['date_creation'],
+                        'source' => 'maxit',
+                        'synced_at' => $compteurFromMaxit['synced_at']
+                    ],
+                    'statut' => 'success',
+                    'code' => 200,
+                    'message' => 'Compteur récupéré depuis Maxit et synchronisé'
+                ];
+            }
 
+            // 3. Compteur introuvable dans les deux sources
             return [
-                'data' => [
-                    'compteur' => $compteur->getNumero(),
-                    'client' => $client ? $client->getNomComplet() : 'Client inconnu',
-                    'actif' => $compteur->isActif(),
-                    'date_creation' => $compteur->getDateCreation()->format('Y-m-d\TH:i:s\Z')
-                ],
-                'statut' => 'success',
-                'code' => 200,
-                'message' => 'Compteur trouvé'
+                'data' => null,
+                'statut' => 'error',
+                'code' => 404,
+                'message' => 'Numéro de compteur inexistant dans la base locale et Maxit'
             ];
+
         } catch (\Exception $e) {
+            error_log("Erreur dans verifierCompteur: " . $e->getMessage());
             return [
                 'data' => null,
                 'statut' => 'error',

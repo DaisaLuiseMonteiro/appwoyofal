@@ -15,6 +15,7 @@ class HomeController
             'version' => '1.0.0',
             'status' => 'active',
             'endpoints' => [
+                // API Woyofal principale
                 [
                     'method' => 'GET',
                     'url' => '/api/woyofal/test-achat',
@@ -36,9 +37,43 @@ class HomeController
                 [
                     'method' => 'GET',
                     'url' => '/api/woyofal/compteur/{numero}',
-                    'description' => 'Vérifier un compteur électrique',
+                    'description' => 'Vérifier un compteur électrique (local puis Maxit)',
                     'parameters' => [
                         'numero' => 'Numéro du compteur à vérifier'
+                    ]
+                ],
+                
+                // API Maxit Integration
+                [
+                    'method' => 'GET',
+                    'url' => '/api/maxit/health',
+                    'description' => 'Vérifier la connectivité avec l\'API Maxit'
+                ],
+                [
+                    'method' => 'GET',
+                    'url' => '/api/maxit/compteur/{numero}',
+                    'description' => 'Rechercher un compteur directement dans Maxit',
+                    'parameters' => [
+                        'numero' => 'Numéro du compteur à rechercher'
+                    ]
+                ],
+                [
+                    'method' => 'POST',
+                    'url' => '/api/maxit/sync/{numero}',
+                    'description' => 'Synchroniser un compteur depuis Maxit vers la base locale',
+                    'parameters' => [
+                        'numero' => 'Numéro du compteur à synchroniser'
+                    ]
+                ],
+                [
+                    'method' => 'POST',
+                    'url' => '/api/maxit/search',
+                    'description' => 'Recherche multiple de compteurs dans Maxit',
+                    'body' => [
+                        'numero' => 'string (optionnel) - Numéro du compteur',
+                        'client_nom' => 'string (optionnel) - Nom du client',
+                        'client_telephone' => 'string (optionnel) - Téléphone du client',
+                        'actif' => 'boolean (optionnel) - Statut actif/inactif'
                     ]
                 ]
             ],
